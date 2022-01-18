@@ -9,34 +9,48 @@ from google.oauth2 import service_account
 
 SCOPES = ['https://www.googleapis.com/auth/admin.directory.user']
 GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.settings.basic']
-SERVICE_ACCOUNT_FILE = 'service_account.json'
 
-MAX_USERS = 10
 
-def sync_gmail(admin_email, domain, page_token=None):
-    print('Updating gmail signatures for {} on behalf of {}'.format(domain, admin_email))
-    credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-    credentials = credentials.with_subject(admin_email)
-    service = build('admin', 'directory_v1', credentials=credentials)
-    results = service.users().list(maxResults=MAX_USERS, domain=domain, orderBy='email', pageToken=page_token).execute()
+WISESTAMP_HOST = "https://gapp.wisestamp.com"
+GET_SIGNATURE_API = "/api/domain/get_signatures"
 
-    users = results.get('users', [])
-    next_page_token = results.get('nextPageToken', None)
 
-    for user in users:
+def sync_gmail(cursor="", num=1):
+    wisestamp_users_data = get_wisestamp_data(cursor=cursor)
+    cursor = wisestamp_users_data["cursor"]
+    last_iteration = wisestamp_users_data["last_iteration"]
+    for data in wisestamp_users_data["data"]:
+        user_key = data["user_key"]
+        signature = data["signature"]
         try:
-            signature_html = get_signature(user['primaryEmail'])
-            update_gmail_signature(user['primaryEmail'], signature_html)
-            print("updated user: {}".format(user['primaryEmail']))
-        except:
-            print("error updating user: {}".format(user['primaryEmail']))
+            update_gmail_signature(user_key, signature)
+            print("[{num}::{user_key}] Set signature successfully".format(num=num, user_key=user_key))
+            num += 1
+        except Exception as e:
+            print("[{num}::{user_key}] Error {error}".format(num=num, user_key=user_key, error=e))
+    if not last_iteration:
+        sync_gmail(cursor=cursor, num=num)
 
-    if next_page_token:
-        sync_gmail(admin_email, domain, next_page_token)
+    
+def get_wisestamp_data(cursor=""):
+    try:
+        res = requests.get("{host}/{api}?token={token}&cursor={cursor}".format(
+            host=WISESTAMP_HOST, 
+            api=GET_SIGNATURE_API, 
+            token=SIGNATURE_TOKEN, 
+            cursor=cursor
+            )
+        )
+        wisestamp_users_data = json.loads(str(res.content, 'UTF-8'))
+        error_message = wisestamp_users_data.get("message")
+        if error_message:
+            print(error_message)
+            sys.exit()
+        return wisestamp_users_data
+    except Exception as e:
+        print("Error: status code {status_code}".format(status_code=res.status_code))
+        sys.exit()
 
-def get_signature(email):
-    res = requests.get("https://gapp.wisestamp.com/domain/user/view_signature/raw?email={}".format(email))
-    return str(res.content, 'UTF-8')
 
 def update_gmail_signature(email, signature_html):
     credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=GMAIL_SCOPES)
@@ -46,17 +60,11 @@ def update_gmail_signature(email, signature_html):
 
 
 if __name__ == '__main__':
-    domain = ''
-    admin_email = ''
-    
-    # Try to read config from config.json
     if exists('config.json'):
         config = json.load(open('config.json'))
-        domain = config.get('domain')
-        admin_email = config.get('admin_email')
-
-    if not domain or not admin_email:
-        print("Can't determine domain or/and admin email")
-        sys.exit()
-    
-    sync_gmail(admin_email, domain)
+        SIGNATURE_TOKEN = config.get('SIGNATURE_TOKEN')
+        SERVICE_ACCOUNT_FILE = config.get('SERVICE_ACCOUNT_FILE')
+        if not SIGNATURE_TOKEN or not SERVICE_ACCOUNT_FILE:
+            print("Can't determine SIGNATURE_TOKEN or/and SERVICE_ACCOUNT_FILE")
+            sys.exit()
+        sync_gmail()
