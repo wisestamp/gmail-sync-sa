@@ -40,7 +40,6 @@
 ![](https://d1n2mpfyq0bf3x.cloudfront.net/85b6dfcdd383687854fa079b443af881/client_id.png)
 In the **OAuth scopes** (comma-delimited) field, enter the list of scopes that your application should be granted access to:
 * https://www.googleapis.com/auth/gmail.settings.basic
-* https://www.googleapis.com/auth/gmail.settings.sharing
 5. Click Authorize.
 
 ## Step 4 Running Gmail signature synchronization script locally.

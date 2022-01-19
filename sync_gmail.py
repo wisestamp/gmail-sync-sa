@@ -7,9 +7,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 
-SCOPES = ['https://www.googleapis.com/auth/admin.directory.user']
 GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.settings.basic']
-
 
 WISESTAMP_HOST = "https://gapp.wisestamp.com"
 GET_SIGNATURE_API = "/api/domain/get_signatures"
