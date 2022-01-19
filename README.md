@@ -39,17 +39,15 @@
 4. In the Client ID field, enter the service account's **Client ID**. You can find your service account's client ID in the [service accounts](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts) page.
 ![](https://d1n2mpfyq0bf3x.cloudfront.net/85b6dfcdd383687854fa079b443af881/client_id.png)
 In the **OAuth scopes** (comma-delimited) field, enter the list of scopes that your application should be granted access to:
-* https://www.googleapis.com/auth/admin.directory.user
 * https://www.googleapis.com/auth/gmail.settings.basic
 * https://www.googleapis.com/auth/gmail.settings.sharing
-* https://www.googleapis.com/auth/admin.directory.user.readonly
 5. Click Authorize.
 
-## Step 4 Running gmail signature synchronization script locally.
-1. Install python3. Make sure python is added to your path and available from command prompt. Make sure pip is also installed
-2. Get the project from this repository.
+## Step 4 Running Gmail signature synchronization script locally.
+1. Install python3. Make sure Python is added to your path and available from command prompt. Make sure pip is also installed
+2. Get the project from [this repository](https://github.com/wisestamp/gmail-sync-sa).
 3. Put service_account.json file inside root folder of the project.
-4. Update config.jons file with your credentials 
+4. Update config.json file with your credentials 
 
 ```json
 {
@@ -57,10 +55,8 @@ In the **OAuth scopes** (comma-delimited) field, enter the list of scopes that y
     "SERVICE_ACCOUNT_FILE": "service_account.json"
 }
 ```
-5. Install necessary python libraries.
+5. Install necessary Python libraries.
 `pip install --upgrade pip`
 `pip install -r requirements.txt`
-6. Run gmail synchronization script. In command prompt execute 
+6. Run Gmail synchronization script. In command prompt execute 
 `python sync_gmail.py`
-
-
