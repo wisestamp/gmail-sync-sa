@@ -7,8 +7,10 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 
+
 GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.settings.basic']
 
+VERSION = "1.0"
 WISESTAMP_HOST = "https://gapp.wisestamp.com"
 GET_SIGNATURE_API = "/api/domain/get_signatures"
 
@@ -29,14 +31,15 @@ def sync_gmail(cursor="", num=1):
     if not last_iteration:
         sync_gmail(cursor=cursor, num=num)
 
-    
+   
 def get_wisestamp_data(cursor=""):
     try:
-        res = requests.get("{host}/{api}?token={token}&cursor={cursor}".format(
+        res = requests.get("{host}/{api}?token={token}&cursor={cursor}&version={version}".format(
             host=WISESTAMP_HOST, 
             api=GET_SIGNATURE_API, 
             token=SIGNATURE_TOKEN, 
-            cursor=cursor
+            cursor=cursor,
+            version=VERSION
             )
         )
         wisestamp_users_data = json.loads(str(res.content, 'UTF-8'))
@@ -66,3 +69,5 @@ if __name__ == '__main__':
             print("Can't determine SIGNATURE_TOKEN or/and SERVICE_ACCOUNT_FILE")
             sys.exit()
         sync_gmail()
+    else:
+        print("Can't find config.json")
