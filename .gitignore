@@ -1,0 +1,9 @@
+venv/
+.idea/
+__pycache__
+dont-track/
+.coverage
+*.pyc
+.vscode
+
+service_account.json
