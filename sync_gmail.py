@@ -48,7 +48,7 @@ def get_wisestamp_data(cursor=""):
             print(error_message)
             sys.exit()
         elif not wisestamp_users_data.get("data"):
-            print("No active users")
+            print("Finished processing")
             sys.exit()
         return wisestamp_users_data
     except Exception as e:
