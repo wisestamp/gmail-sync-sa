@@ -1,7 +1,7 @@
 #  Running Gmail signature synchronization locally
 
 
-## Step 1: Create a Google Cloud project.
+## 1. Create Google Cloud project
 
 1. [Open the Google Cloud Console.](https://console.cloud.google.com/)
 2. At the top-left, click Menu icon > IAM & Admin > Create a Project.
@@ -11,7 +11,13 @@
 5. In the Location field, click Browse to display potential locations for your project. Then, click Select.
 6. Click Create. The console navigates to the Dashboard page and your project is created within a few minutes.
 
-## Step 2 Creating a service account.
+## 2. Enable Gmail API
+1. With the correct project selected, go to the [Gmail API page](https://console.cloud.google.com/apis/library/gmail.googleapis.com)
+1. Click "Enable" to enable Gmail API
+
+![image](https://user-images.githubusercontent.com/11390801/151217167-9adcc188-fb45-4c7b-bbf4-a62fe7340cc4.png)
+
+## 3. Create service account
 
 1. Open the [Service accounts](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts) page.
 2. If prompted, select your project.
@@ -28,9 +34,9 @@
 ![](https://d1n2mpfyq0bf3x.cloudfront.net/85b6dfcdd383687854fa079b443af881/create_service_account_key.png)
 3. In the Add key drop-down list, select Create new key.
 4. Click Create.
-5. Download JSON file to your machine. Rename it to service_account.json Will be needed in step #4
+5. Download JSON file to your machine. Rename it to `service_account.json`. This will be needed in Step 5.
 
-## Step 3 Delegating domain-wide authority to the service account.
+## 4. Delegate domain-wide authority to service account
 1. From your Google Workspace domain’s Admin console, go to [**Main menu > Security > API Controls.**](https://admin.google.com/ac/owl)
 2. In the Domain wide delegation pane, select **Manage Domain Wide Delegation.**
 ![](https://d1n2mpfyq0bf3x.cloudfront.net/85b6dfcdd383687854fa079b443af881/domain-wide-authority.png)
@@ -42,7 +48,7 @@ In the **OAuth scopes** (comma-delimited) field, enter the list of scopes that y
 * https://www.googleapis.com/auth/gmail.settings.basic
 5. Click Authorize.
 
-## Step 4 Running Gmail signature synchronization script locally.
+## 5. Run Gmail signature synchronization script locally
 1. Install python3. Make sure Python is added to your path and available from command prompt. Make sure pip is also installed
 2. Get the project from [this repository](https://github.com/wisestamp/gmail-sync-sa).
 3. Put service_account.json file inside root folder of the project.
