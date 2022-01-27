@@ -7,3 +7,4 @@ dont-track/
 .vscode
 
 service_account.json
+config.json

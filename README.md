@@ -52,7 +52,7 @@ In the **OAuth scopes** (comma-delimited) field, enter the list of scopes that y
 1. Install python3. Make sure Python is added to your path and available from command prompt. Make sure pip is also installed
 2. Get the project from [this repository](https://github.com/wisestamp/gmail-sync-sa).
 3. Put service_account.json file inside root folder of the project.
-4. Update config.json file with your credentials 
+4. Use config.json.template file to create config.json file with your credentials 
 
 ```json
 {
